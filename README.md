@@ -19,7 +19,6 @@ The program will calculate:
 
 - **Battery Management**
 - **Solar Panel Integration**
-- **Wind Turbine Utilization**
 
 ### Data Requirements
 
