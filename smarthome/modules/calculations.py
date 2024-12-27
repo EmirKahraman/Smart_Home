@@ -7,9 +7,11 @@ OFF_PEAK_TARIFF = 0.1
 MID_PEAK_TARIFF = 0.2
 PEAK_TARIFF = 0.3
 
+#### ROUND VALUES BY .3f 
 class Calculations:
-
     @staticmethod
+    #### THİS WONT WORK
+    #### kaydırılmıs profil profile df gibi bir veri göndermeli saatleri değişmiş olarak
     def load_shifting(profile_df, discharge_df, threshold, peak_hours):
         # Create initial hourly profile from discharge data
         hourly_profile = {hour: 0 for hour in range(24)}
@@ -43,6 +45,7 @@ class Calculations:
         return shifted_profile
     
     @staticmethod
+    #### TAKE A LOK AT THİS COST TOO LOW
     def calculate_energy_cost(profile_df, peak_hours):
         print(f"\nCalculating energy cost...")
 

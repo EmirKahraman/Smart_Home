@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 import matplotlib.pyplot as plt
 
-import os
+import os   # For path
 
 from modules.battery import Battery
 from modules.load_profile import ElectricLoad
@@ -132,38 +132,58 @@ class EnergyAnalyzerApp:
 
             # Display results in the output text box
             self.output_text.delete("1.0", tk.END)
-            self.output_text.insert(tk.END, f"Winter Energy Cost (Original): {winter_cost:.2f}\n")
-            self.output_text.insert(tk.END, f"Winter Energy Cost (Shifted): {shifted_winter_cost:.2f}\n")
-            self.output_text.insert(tk.END, f"Summer Energy Cost (Original): {summer_cost:.2f}\n")
-            self.output_text.insert(tk.END, f"Summer Energy Cost (Shifted): {shifted_summer_cost:.2f}\n")
+            self.output_text.insert(tk.END, f"Winter Hourly Energy Cost (Original): {winter_cost:.3f} $\n")
+            self.output_text.insert(tk.END, f"Winter Hourly Energy Cost (Shifted): {shifted_winter_cost:.3f} $\n")
+            self.output_text.insert(tk.END, f"Summer Hourly Energy Cost (Original): {summer_cost:.3f} $\n")
+            self.output_text.insert(tk.END, f"Summer Hourly Energy Cost (Shifted): {shifted_summer_cost:.3f} $\n")
             
-            plt.figure(figsize=(12, 8))
-
-            # Winter Profile Plot
-            plt.subplot(2, 1, 1)
-            plt.plot(winter_profile_df, label="Original Winter", color="blue")
-            plt.plot(shifted_winter_profile_df, label="Shifted Winter", color="cyan", linestyle="--")
-            plt.title("Winter Profiles")
-            plt.xlabel("Hour of the Day")
-            plt.ylabel("Energy (kW)")
-            plt.legend()
-            plt.grid()
-
-            # Summer Profile Plot
-            plt.subplot(2, 1, 2)
-            plt.plot(summer_profile_df, label="Original Summer", color="orange")
-            plt.plot(shifted_summer_profile_df, label="Shifted Summer", color="red", linestyle="--")
-            plt.title("Summer Profiles")
-            plt.xlabel("Hour of the Day")
-            plt.ylabel("Energy (kW)")
-            plt.legend()
-            plt.grid()
-
-            plt.tight_layout()
-            plt.show()
+            # Plot results
+            self.plot_load_profile(winter_profile_df, shifted_winter_profile_df, peak_hours)            
+            self.plot_load_profile_alternative(winter_profile_df, shifted_winter_profile_df)
+            self.plot_load_profile(summer_profile_df, shifted_summer_profile_df, peak_hours)
+            self.plot_load_profile_alternative(summer_profile_df, shifted_summer_profile_df)
 
         except Exception as e:
             messagebox.showerror("Error", str(e))
+
+    @staticmethod
+    def plot_load_profile(original_profile, shifted_profile, peak_hours):
+        print("\nPlotting graphs...")
+        plt.figure(figsize=(12, 6))
+
+        hours = range(24)
+
+        bar_width = 0.35
+        print("Orginal")
+        plt.bar(hours, original_profile, bar_width, label='Original Profile', color='blue', alpha=0.6)
+        #### PLOT BATTERY as well
+        print("Shifted")
+        plt.bar([x + bar_width for x in hours], shifted_profile, bar_width, label='Shifted Profile', color='red', alpha=0.6)
+        
+        plt.axvspan(min(peak_hours)-0.5, max(peak_hours)+0.5, color='yellow', alpha=0.2, label='Peak Hours')
+        
+        plt.xlabel('Hour of Day')
+        plt.ylabel('Power (kW)')
+        plt.title('Load Profile Comparison')
+        plt.legend()
+        plt.grid(True, alpha=0.3)
+        plt.show()
+
+    @staticmethod
+    def plot_load_profile_alternative(original_profile, shifted_profile):
+        plt.figure(figsize=(12, 8))
+
+        plt.subplot(2, 1, 1)
+        plt.plot(original_profile, label="Original Winter", color="blue")
+        plt.plot(shifted_profile, label="Shifted Winter", color="cyan", linestyle="--")
+        plt.title("Winter Profiles")
+        plt.xlabel("Hour of the Day")
+        plt.ylabel("Energy (kW)")
+        plt.legend()
+        plt.grid()
+
+        plt.tight_layout()
+        plt.show()
 
 
 # Run the GUI application
