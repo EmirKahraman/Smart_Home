@@ -7,19 +7,17 @@ Classes:
 Methods:
     from_excel(load_profile_file_path): Reads electric load data from an Excel file and returns a list of ElectricLoad instances.
 
-THIS CODE ONLY WORKS WITH SPECICIF FILES
+NOTE: THIS CODE ONLY WORKS WITH SPECIFIC FILES THAT CONTAIN THE EXPECTED STRUCTURE.
 """
 
 import pandas as pd
 
 class ElectricLoad:
-    """ Represents an electric load with attributes such as name, rated power, priority group, and working hours for winter and summer. """
 
     @staticmethod
     def from_excel(load_profile_file_path: str):
-        """Reads an Excel file with electric load profiles and returns a clean DataFrame."""
-        
-        # Read the Excel file for Electric Load Data
+        """ Reads an Excel file with electric load profiles and returns a clean DataFrame. """
+        # Read Excel file and validate columns
         print(f"\nReading Excel file: {load_profile_file_path}")
         df = pd.read_excel(load_profile_file_path)
         print(f"Columns found: {df.columns.tolist()}")
@@ -58,9 +56,6 @@ class ElectricLoad:
             replaced_count += invalid_values.sum()
             df[col] = df[col].where(df[col].between(0, 24), 0)
 
-        # Display the cleaned DataFrame
-        print(f"\nCleaned Electric Load Data Table:\n{df}")
-
         # Separate DataFrames for winter and summer loads
         winter_load = df[['Name', 'Rated Power (kW)', 'Priority Group', 'Winter Hours Start', 'Winter Hours End']].copy()
         summer_load = df[['Name', 'Rated Power (kW)', 'Priority Group', 'Summer Hours Start', 'Summer Hours End']].copy()
@@ -69,7 +64,9 @@ class ElectricLoad:
         winter_load.rename(columns={'Winter Hours Start': 'Start', 'Winter Hours End': 'End'}, inplace=True)
         summer_load.rename(columns={'Summer Hours Start': 'Start', 'Summer Hours End': 'End'}, inplace=True)
 
+        print(f"\nCleaned Electric Load Data Table:\n{df}")
         print(f"\nWinter Load Data:\n{winter_load}")
-        print(f"\nSummer Load Data:\n{summer_load}\n")
+        print(f"\nSummer Load Data:\n{summer_load}")
 
+        print("\nElectric Load Data Processing Complete.")
         return winter_load, summer_load

@@ -15,12 +15,10 @@ ITS COMPATIBLE WITH CSV METEOROLOGY FILES FROM: https://re.jrc.ec.europa.eu/pvg_
 import pandas as pd
 
 class MeteorologicalData:
-    """ Represents meteorological data and provides methods to read data from files. """
 
     def from_csv(meteorological_file_path: str):
-        """Reads a CSV file with meteorological data and returns a DataFrame with hourly average solar irradiance for both winter and summer seasons."""
-
-        # Read the CSV file for Meteorological Data
+        """ Reads a CSV file with meteorological data and returns a DataFrame with hourly average solar irradiance for both winter and summer seasons. """
+        # Read CSV file and validate columns
         print(f"\nReading CSV file: {meteorological_file_path}")
         df = pd.read_csv(meteorological_file_path, skiprows=10, low_memory=False, on_bad_lines='warn')  
         print(f"Columns found in the CSV file: {df.columns.tolist()}")
@@ -69,4 +67,5 @@ class MeteorologicalData:
         print(f"\nWinter Profile:\n{winter_df.head(24)}")
         print(f"\nSummer Profile:\n{summer_df.head(24)}")
         
+        print("\nMeteorological Data Processing Complete.")
         return winter_df, summer_df

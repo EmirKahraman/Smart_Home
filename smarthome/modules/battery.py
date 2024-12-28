@@ -50,6 +50,7 @@ class Battery:
 
         discharge_df = pd.DataFrame(discharge_log)  # Combine all discharge information into a single DataFrame
         print(f"\n{discharge_df}")
+        print(f"\nBattery Simulation Complete.")
         return discharge_df
 
     def discharge_battery(self, profile_df, threshold, hour):
