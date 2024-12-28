@@ -31,61 +31,13 @@ MID_PEAK_TARIFF = 0.2
 PEAK_TARIFF = 0.3
 
 class Calculations:
-
-    @staticmethod
-    def update_profile(profile_df, battery_discharge_profile):
-        """
-        Updates the load profile by subtracting battery discharge for each active hour,
-        modifying the input DataFrame.
-
-        Parameters:
-        - profile_df: DataFrame containing the load profile of appliances.
-        - battery_discharge_profile: DataFrame containing battery discharge data (hour and discharge power).
-
-        Returns:
-        - Updated profile DataFrame with the battery discharge applied.
-        """
-        print("\nUpdating profile with battery discharge...")
-
-        # Iterate over each row in the battery discharge profile
-        for _, row in battery_discharge_profile.iterrows():
-            hour = int(row["Hour"])  # Extract the hour (assuming it is an integer)
-            discharge = row["Discharge (kW)"]  # Extract the discharge value
-
-            # If no discharge (battery is empty or no discharge), skip this hour
-            if discharge <= 0:
-                print(f"  Hour {hour}: Battery is empty or no discharge, no adjustment applied.")
-                continue  # Skip if no discharge (battery is empty or has no discharge)
-            
-            print(f"  Hour {hour}: Battery Discharge = {discharge:.3f} kW")
-
-            # Iterate through appliances to apply the discharge to running appliances
-            for index, appliance in profile_df.iterrows():
-                appliance_name = appliance["Name"]
-                start = appliance["Start"]
-                end = appliance["End"]
-                rated_power = appliance["Rated Power (kW)"]
-
-                # Check if the appliance is active during this hour (handles overnight appliances)
-                if start <= hour < end or (start > end and (hour >= start or hour < end)):
-                    original_load = rated_power
-                    # Apply discharge to the appliance load, if it is running during this hour
-                    updated_load = max(0, original_load - discharge)  # Ensure load does not go below 0
-                    profile_df.at[index, "Rated Power (kW)"] = updated_load
-                    print(f"    Appliance: {appliance_name}")
-                    print(f"      Original Load: {original_load:.3f} kW, Updated Load: {updated_load:.3f} kW")
-                else:
-                    print(f"    Appliance: {appliance_name} not running at hour {hour}, no change.")
-
-        print("Profile update completed.")
-        return profile_df
     
     @staticmethod
     def shift_loads(profile_df, threshold, peak_hours):
         """
         Shifts loads within peak hours (17:00 to 22:00) to off-peak hours to reduce energy costs,
         starting with the highest-priority loads and stopping once errors are satisfied.
-        
+
         Parameters:
         - profile_df: DataFrame containing the load profile of appliances.
         - threshold: Maximum allowable load in any hour to prevent overloading the grid.
@@ -127,15 +79,15 @@ class Calculations:
             rated_power = row["Rated Power (kW)"]
             priority = row["Priority Group"]
 
-            if rated_power == 0:
-                continue  # Skip zero-power loads
+            if rated_power == 0 or priority <= 2:
+                continue  # Skip zero-power loads and priority 1 or 2 appliances
 
             print(f"Processing load: {name} ({rated_power} kW) with priority {priority}")
             print(f"  Original schedule: Start = {start}, End = {end}")
 
             # Check if load overlaps with peak hours
             overlaps = any(hour in peak_hours for hour in range(int(start), int(end))) if end > start else \
-                    any(hour in peak_hours for hour in list(range(int(start), 24)) + list(range(0, int(end))))
+                        any(hour in peak_hours for hour in list(range(int(start), 24)) + list(range(0, int(end))))
 
             if not overlaps:
                 continue
@@ -145,15 +97,16 @@ class Calculations:
                 if errors[hour] == 0:
                     continue  # Skip hours where error is already resolved
 
-                # Attempt to shift the load to a non-peak hour after 22:00
-                shift_start = 23  # Example shift hour, adjust as needed
+                # Shift load after 22:00 (let's make a simple adjustment after peak hours)
+                shift_start = 23  # Shift hour, adjust as needed
                 shift_end = (shift_start + (int(end) - int(start))) % 24
                 shift_hours = list(range(shift_start, shift_end)) if shift_end > shift_start else \
                             list(range(shift_start, 24)) + list(range(0, shift_end))
 
-                valid_shift = all(peak_hour_loads.get(h, 0) + rated_power <= threshold for h in shift_hours)
+                # Check if shifting the load would cause the peak hour load to exceed the threshold
+                potential_error_increase = any(peak_hour_loads.get(hour, 0) + rated_power > threshold for hour in shift_hours)
 
-                if valid_shift:
+                if not potential_error_increase:
                     print(f"  Shifting load to start at hour {shift_start}")
 
                     # Update the profile with the new start and end times
@@ -174,14 +127,10 @@ class Calculations:
 
                     break  # Move to the next load after a successful shift
 
-                # Stop processing this hour if the error is fully resolved
-                if errors[hour] == 0:
-                    print(f"Error for hour {hour} is resolved.")
-                    break
-
-        print(f"\nUpdated Load Profile:\n{profile_df}")
+        print(f"\nShifted Load Profile:\n{profile_df}")
         print("Load shifting completed.")
         return profile_df
+
         
     @staticmethod
     def calculate_energy_cost(profile_df, peak_hours):

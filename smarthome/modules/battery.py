@@ -50,8 +50,12 @@ class Battery:
 
         discharge_df = pd.DataFrame(discharge_log)  # Combine all discharge information into a single DataFrame
         print(f"\n{discharge_df}")
-        print(f"\nBattery Simulation Complete.")
-        return discharge_df
+
+        # Update profile
+        updated_df = self.update_profile(profile_df, discharge_df)
+
+        print(f"Battery Simulation Complete.")
+        return updated_df
 
     def discharge_battery(self, profile_df, threshold, hour):
         """
@@ -109,3 +113,51 @@ class Battery:
             change (float): The change in SoC percentage (positive for charging, negative for discharging).
         """
         self.soc = max(0, min(100, self.soc + change))  # Ensure SoC stays between 0% and 100%
+
+    @staticmethod
+    def update_profile(profile_df, discharge_df):
+        """
+        Updates the load profile by adding separate virtual appliances for battery discharge.
+
+        Parameters:
+        - profile_df: DataFrame containing the load profile of appliances.
+        - discharge_df: DataFrame containing battery discharge data (hour, discharge power, and state of charge).
+
+        Returns:
+        - Updated profile DataFrame including separate battery discharge rows for each hour in discharge_df.
+        """
+        print("\nUpdating profile with separate battery appliances...")
+
+        new_rows = []
+        for _, row in discharge_df.iterrows():
+            hour = int(row["Hour"])
+            discharge = row["Discharge (kW)"]
+            state_of_charge = row["State of Charge (%)"]
+
+            # Skip if there's no discharge or if the battery is empty
+            if discharge <= 0:
+                print(f"  Hour {hour}: No discharge to apply.")
+                continue
+            if state_of_charge <= 0:
+                print(f"  Hour {hour}: Battery is empty, no discharge applied.")
+                continue
+
+            # Add a virtual appliance for this specific hour
+            battery_appliance_name = f"Battery Discharge (Hour {hour})"
+            print(f"  Adding virtual appliance: {battery_appliance_name} with discharge {discharge:.3f} kW")
+
+            new_rows.append({
+                "Name": battery_appliance_name,
+                "Rated Power (kW)": -discharge,  # Negative power to represent discharge
+                "Priority Group": 0,  # Highest priority for processing
+                "Start": hour,  # Active start hour
+                "End": hour + 1  # Active for the specific hour
+            })
+
+        # Append new rows to the profile DataFrame
+        profile_df = pd.concat([profile_df, pd.DataFrame(new_rows)], ignore_index=True)
+
+        print("\nUpdated profile with separate battery discharge appliances:")
+        print(profile_df)
+        return profile_df
+
