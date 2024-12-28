@@ -87,8 +87,8 @@ class EnergyAnalyzerApp:
             
             threshold = self.threshold.get()                    # Get the threshold value
             print(f"Threshold set to: {threshold}")
-            max_row = winter_profile_df.loc[winter_profile_df['Rated Power (kW)'].idxmax()]
-            max_rated_power = max_row['Rated Power (kW)']
+            temp = self.generate_hourly_profile(winter_profile_df)
+            max_rated_power = max(temp['Power (kW)'])  # Get the maximum rated power
             print(f"Max load set to: {max_rated_power}")
             peak_hours = list(range(PEAK_START, PEAK_END + 1))  # Define peak hours
             print(f"Peak hours: {peak_hours}")
@@ -98,7 +98,7 @@ class EnergyAnalyzerApp:
                 capacity=max_rated_power * 0.5,  # 50% of max rated power as capacity
                 charge_rate=0.2,    # Charge rate set to 0.2 kW
                 discharge_rate=0.3,     # Discharge rate set to 0.3 kW
-                soc=0.1 * max_rated_power * 0.5,  # Initial SoC set to 10% of capacity
+                soc=(max_rated_power * 0.5) * 0.1,  # Initial SoC set to 10% of capacity
                 panel_area=10,
                 panel_efficiency=.70,
             )
@@ -164,8 +164,8 @@ class EnergyAnalyzerApp:
 
         # Plot original profile
         plt.plot(profile_hourly.index, profile_hourly['Power (kW)'], label="Original Profile", color="blue", linestyle="-")
-        # Plot updated profile
-        plt.plot(battery_profile_hourly.index, battery_profile_hourly['Power (kW)'], label="Updated Profile", color="green", linestyle="--")
+        # Plot battery profile
+        plt.plot(battery_profile_hourly.index, battery_profile_hourly['Power (kW)'], label="Battery Profile", color="green", linestyle="--")
         # Plot shifted profile
         plt.plot(shifted_profile_hourly.index, shifted_profile_hourly['Power (kW)'], label="Shifted Profile", color="red", linestyle=":")
 
