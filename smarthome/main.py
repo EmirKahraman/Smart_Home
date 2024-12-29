@@ -105,7 +105,7 @@ class EnergyAnalyzerApp:
                 panel_efficiency=.70,
             )
 
-            battery_winter_profile_df = battery.simulate_battery(winter_profile_df, winter_meteorological_df, threshold, peak_hours)    # Manage battery for winter profile
+            battery_winter_profile_df, winter_soc = battery.simulate_battery(winter_profile_df, winter_meteorological_df, threshold, peak_hours)    # Manage battery for winter profile
             shifted_winter_profile_df = Calculations.shift_loads(battery_winter_profile_df, threshold, peak_hours)    # Shift winter profile
 
             print(f"Original Profile: {type(winter_profile_df)}, Shape: {np.shape(winter_profile_df)}")
@@ -145,7 +145,7 @@ class EnergyAnalyzerApp:
                 panel_efficiency=.70,
             )
 
-            battery_summer_profile_df = battery.simulate_battery(summer_profile_df, summer_meteorological_df, threshold, peak_hours)    # Manage battery for summer profile
+            battery_summer_profile_df, summer_soc = battery.simulate_battery(summer_profile_df, summer_meteorological_df, threshold, peak_hours)    # Manage battery for summer profile
             shifted_summer_profile_df = Calculations.shift_loads(battery_summer_profile_df, threshold, peak_hours)    # Shift summer profile
 
             print(f"Original Profile: {type(summer_profile_df)}, Shape: {np.shape(summer_profile_df)}")                 # Display the original profile
@@ -167,8 +167,8 @@ class EnergyAnalyzerApp:
 
             # Plot the profiles
             self.plot_seasonal_profiles(
-                winter_hourly, battery_winter_hourly, shifted_winter_hourly, winter_meteorological_df,
-                summer_hourly, battery_summer_hourly, shifted_summer_hourly, summer_meteorological_df,
+                winter_hourly, battery_winter_hourly, shifted_winter_hourly, winter_meteorological_df, winter_soc,
+                summer_hourly, battery_summer_hourly, shifted_summer_hourly, summer_meteorological_df, summer_soc,
                 peak_hours
 
             )
@@ -177,32 +177,23 @@ class EnergyAnalyzerApp:
             messagebox.showerror("Error", str(e))
 
     @staticmethod
-    def plot_seasonal_profiles(winter_hourly, battery_winter_hourly, shifted_winter_hourly, winter_meteorological_df, summer_hourly, battery_summer_hourly, shifted_summer_hourly, summer_meteorological_df, peak_hours):
+    def plot_seasonal_profiles(winter_hourly, battery_winter_hourly, shifted_winter_hourly, winter_meteorological_df, winter_soc, 
+                               summer_hourly, battery_summer_hourly, shifted_summer_hourly, summer_meteorological_df, summer_soc, 
+                               peak_hours):
         """Plot winter and summer profiles as bar charts."""
 
-        # Create subplots
+        # Meteorological data plots
         fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(15, 10))
-        
-        # Bar width and positions
-        width = 0.25
         x = np.arange(24)
-        
-        # Winter plot
-        ax1.bar(x - width, winter_hourly['Power (kW)'], width, label='Original Profile', color='blue', alpha=0.7)
-        # ax1.bar(x, battery_winter_hourly['Power (kW)'], width, label='Battery Profile', color='green', alpha=0.7)
-        # ax1.bar(x + width, shifted_winter_hourly['Power (kW)'], width, label='Shifted Profile', color='red', alpha=0.7)
-        ax1.axvspan(min(peak_hours)-0.5, max(peak_hours)+0.5, color='yellow', alpha=0.2, label='Peak Hours')
+
+        ax1.bar(x, winter_meteorological_df['Irradiation (kW/m^2)'], width, label='Solar Irradiation', color='yellow', alpha=0.7)
         ax1.set_title('Winter Load Profiles')
         ax1.set_xlabel('Hour of Day')
         ax1.set_ylabel('Power (kW)')
         ax1.legend()
         ax1.grid(True, alpha=0.3)
-        
-        # Summer plot
-        ax2.bar(x - width, summer_hourly['Power (kW)'], width, label='Original Profile', color='blue', alpha=0.7)
-        # ax2.bar(x, battery_summer_hourly['Power (kW)'], width, label='Battery Profile', color='green', alpha=0.7)
-        # ax2.bar(x + width, shifted_summer_hourly['Power (kW)'], width, label='Shifted Profile', color='red', alpha=0.7)
-        ax2.axvspan(min(peak_hours)-0.5, max(peak_hours)+0.5, color='yellow', alpha=0.2, label='Peak Hours')
+
+        ax2.bar(x, summer_meteorological_df['Irradiation (kW/m^2)'], width, label='Solar Irradiation', color='yellow', alpha=0.7)
         ax2.set_title('Summer Load Profiles')
         ax2.set_xlabel('Hour of Day')
         ax2.set_ylabel('Power (kW)')
@@ -212,18 +203,48 @@ class EnergyAnalyzerApp:
         plt.tight_layout()
         plt.show()
 
-        # Create subplots
+        # State of Charge plots
         fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(15, 10))
         x = np.arange(24)
 
-        ax1.bar(x, winter_meteorological_df['Irradiation (kW/m^2)'], width, label='Shifted Profile', color='yellow', alpha=0.7)
+        ax1.bar(x, winter_soc['State of Charge (%)'], width, label='Battery SoC', color='orange', alpha=0.7)
         ax1.set_title('Winter Load Profiles')
         ax1.set_xlabel('Hour of Day')
         ax1.set_ylabel('Power (kW)')
         ax1.legend()
         ax1.grid(True, alpha=0.3)
 
-        ax2.bar(x, summer_meteorological_df['Irradiation (kW/m^2)'], width, label='Shifted Profile', color='yellow', alpha=0.7)
+        ax2.bar(x, summer_soc['State of Charge (%)'], width, label='Battery SoC', color='orange', alpha=0.7)
+        ax2.set_title('Summer Load Profiles')
+        ax2.set_xlabel('Hour of Day')
+        ax2.set_ylabel('Power (kW)')
+        ax2.legend()
+        ax2.grid(True, alpha=0.3)
+
+        plt.tight_layout()
+        plt.show()
+
+        # Load profiles
+        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(15, 10))
+        width = 0.25
+        x = np.arange(24)
+        
+        # Winter plot
+        ax1.bar(x - width, winter_hourly['Power (kW)'], width, label='Original Profile', color='blue', alpha=0.7)
+        ax1.bar(x, battery_winter_hourly['Power (kW)'], width, label='Battery Profile', color='green', alpha=0.7)
+        ax1.bar(x + width, shifted_winter_hourly['Power (kW)'], width, label='Shifted Profile', color='red', alpha=0.7)
+        ax1.axvspan(min(peak_hours)-0.5, max(peak_hours)+0.5, color='yellow', alpha=0.2, label='Peak Hours')
+        ax1.set_title('Winter Load Profiles')
+        ax1.set_xlabel('Hour of Day')
+        ax1.set_ylabel('Power (kW)')
+        ax1.legend()
+        ax1.grid(True, alpha=0.3)
+        
+        # Summer plot
+        ax2.bar(x - width, summer_hourly['Power (kW)'], width, label='Original Profile', color='blue', alpha=0.7)
+        ax2.bar(x, battery_summer_hourly['Power (kW)'], width, label='Battery Profile', color='green', alpha=0.7)
+        ax2.bar(x + width, shifted_summer_hourly['Power (kW)'], width, label='Shifted Profile', color='red', alpha=0.7)
+        ax2.axvspan(min(peak_hours)-0.5, max(peak_hours)+0.5, color='yellow', alpha=0.2, label='Peak Hours')
         ax2.set_title('Summer Load Profiles')
         ax2.set_xlabel('Hour of Day')
         ax2.set_ylabel('Power (kW)')

@@ -23,6 +23,7 @@ class Battery:
         """
         print(f"\nSimulating Battery...")
         discharge_log = []  # List to store discharge details per hour
+        soc_log = []  # List to store SoC values per hour
         hourly_powers = self.calculate_hourly_power(profile_df)  # Calculate hourly power consumption
 
         for hour in range(24):
@@ -32,7 +33,8 @@ class Battery:
                 irradiance = irradiance_row.iloc[0]['Irradiation (kW/m^2)']
 
             print(f"Hour {hour} - Solar irradiance: {irradiance:.2f} kW/m^2, Current SoC: {self.soc:.2f}%")
-
+            soc_log.append({'Hour': hour, 'State of Charge (%)': self.soc})  # Log the current SoC
+            
             if self.soc < 80:   # Charge battery with solar energy if SoC is below 80%
                 if hour in peak_hours:
                     # In peak hours, charge up to 50% if solar irradiance is available
@@ -49,17 +51,18 @@ class Battery:
                 if self.soc < 30 or irradiance > 0:  # Recharge if SoC is below 30% in peak hours or solar energy is available
                     self.charge_battery_with_solar(irradiance, in_peak_hours=True)
                 
-                
             else:
                 discharge_log.append({'Hour': hour, 'Discharge (kW)': 0, 'State of Charge (%)': self.soc})
 
         discharge_df = pd.DataFrame(discharge_log)  # Combine all discharge information into a single DataFrame
         print(f"\n{discharge_df}")
+        soc_df = pd.DataFrame(soc_log)  # Convert SoC log into a DataFrame
+        print(f"\n{soc_df}")
 
         updated_df = self.update_profile(profile_df, discharge_df)
 
         print(f"Battery Simulation Complete.")
-        return updated_df
+        return updated_df, soc_df
 
     def discharge_battery(self, hourly_power, threshold, hour):
         """
