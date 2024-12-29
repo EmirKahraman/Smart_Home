@@ -14,7 +14,6 @@ from modules.calculations import Calculations
 PEAK_START = 17
 PEAK_END = 22
 
-
 class EnergyAnalyzerApp:
     def __init__(self, root):
         self.root = root
@@ -84,14 +83,17 @@ class EnergyAnalyzerApp:
             # Load data
             winter_profile_df, summer_profile_df = ElectricLoad.from_excel(self.load_file_path)
             winter_meteorological_df, summer_meteorological_df = MeteorologicalData.from_csv(self.met_file_path)
-            
+
             threshold = self.threshold.get()                    # Get the threshold value
             print(f"Threshold set to: {threshold}")
+            peak_hours = list(range(PEAK_START, PEAK_END + 1))  # Define peak hours
+            print(f"Peak hours: {peak_hours}")
+
+            print("\n===================WINTER PROFILE===================\n")
+
             temp = self.generate_hourly_profile(winter_profile_df)
             max_rated_power = max(temp['Power (kW)'])  # Get the maximum rated power
             print(f"Max load set to: {max_rated_power}")
-            peak_hours = list(range(PEAK_START, PEAK_END + 1))  # Define peak hours
-            print(f"Peak hours: {peak_hours}")
 
             # Create a battery instance for winter
             battery = Battery(      # Create a battery instance
@@ -106,13 +108,32 @@ class EnergyAnalyzerApp:
             battery_winter_profile_df = battery.simulate_battery(winter_profile_df, winter_meteorological_df, threshold, peak_hours)    # Manage battery for winter profile
             shifted_winter_profile_df = Calculations.shift_loads(battery_winter_profile_df, threshold, peak_hours)    # Shift winter profile
 
-            winter_cost = Calculations.calculate_energy_cost(winter_profile_df, peak_hours)
-            battery_winter_cost = Calculations.calculate_energy_cost(battery_winter_profile_df, peak_hours)
-            shifted_winter_cost = Calculations.calculate_energy_cost(shifted_winter_profile_df, peak_hours)
-
             print(f"Original Profile: {type(winter_profile_df)}, Shape: {np.shape(winter_profile_df)}")
             print(f"Battery Profile: {type(battery_winter_profile_df)}, Shape: {np.shape(battery_winter_profile_df)}")
             print(f"Shifted Profile: {type(shifted_winter_profile_df)}, Shape: {np.shape(shifted_winter_profile_df)}")    
+
+            winter_hourly = EnergyAnalyzerApp.generate_adjusted_profile(winter_profile_df)
+            print(winter_hourly)
+            battery_winter_hourly = EnergyAnalyzerApp.generate_adjusted_profile(winter_profile_df, battery_winter_profile_df)
+            print(battery_winter_hourly)
+            shifted_winter_hourly = EnergyAnalyzerApp.generate_adjusted_profile(shifted_winter_profile_df, battery_winter_profile_df)
+            print(shifted_winter_hourly)
+
+            winter_cost = Calculations.calculate_energy_cost(winter_hourly, peak_hours)
+            battery_winter_cost = Calculations.calculate_energy_cost(battery_winter_hourly, peak_hours)
+            shifted_winter_cost = Calculations.calculate_energy_cost(shifted_winter_hourly, peak_hours)
+
+            # Display results in the output text box
+            self.output_text.delete("1.0", tk.END)
+            self.output_text.insert(tk.END, f"Winter Hourly Energy Cost (Original): {winter_cost:.3f} $\n")
+            self.output_text.insert(tk.END, f"Winter Hourly Energy Cost (Battery): {battery_winter_cost:.3f} $\n")
+            self.output_text.insert(tk.END, f"Winter Hourly Energy Cost (Shifted): {shifted_winter_cost:.3f} $\n")
+
+            print("\n===================SUMMER PROFILE===================\n")
+
+            temp = self.generate_hourly_profile(summer_profile_df)
+            max_rated_power = max(temp['Power (kW)'])  # Get the maximum rated power
+            print(f"Max load set to: {max_rated_power}")
 
             # Create a battery instance for summer
             battery = Battery(      # Create a battery instance
@@ -127,60 +148,121 @@ class EnergyAnalyzerApp:
             battery_summer_profile_df = battery.simulate_battery(summer_profile_df, summer_meteorological_df, threshold, peak_hours)    # Manage battery for summer profile
             shifted_summer_profile_df = Calculations.shift_loads(battery_summer_profile_df, threshold, peak_hours)    # Shift summer profile
 
-            summer_cost = Calculations.calculate_energy_cost(summer_profile_df, peak_hours)
-            battery_summer_cost = Calculations.calculate_energy_cost(battery_summer_profile_df, peak_hours)
-            shifted_summer_cost = Calculations.calculate_energy_cost(shifted_summer_profile_df, peak_hours)
-
-            print(f"Original Profile: {type(winter_profile_df)}, Shape: {np.shape(winter_profile_df)}")
+            print(f"Original Profile: {type(summer_profile_df)}, Shape: {np.shape(summer_profile_df)}")                 # Display the original profile
             print(f"Battery Profile: {type(battery_summer_profile_df)}, Shape: {np.shape(battery_summer_profile_df)}")
-            print(f"Shifted Profile: {type(shifted_winter_profile_df)}, Shape: {np.shape(shifted_winter_profile_df)}") 
+            print(f"Shifted Profile: {type(shifted_summer_profile_df)}, Shape: {np.shape(shifted_summer_profile_df)}") 
+
+            summer_hourly = EnergyAnalyzerApp.generate_adjusted_profile(summer_profile_df)
+            battery_summer_hourly = EnergyAnalyzerApp.generate_adjusted_profile(summer_profile_df, battery_summer_profile_df)
+            shifted_summer_hourly = EnergyAnalyzerApp.generate_adjusted_profile(shifted_summer_profile_df, battery_summer_profile_df)
+            
+            summer_cost = Calculations.calculate_energy_cost(summer_hourly, peak_hours)
+            battery_summer_cost = Calculations.calculate_energy_cost(battery_summer_hourly, peak_hours)
+            shifted_summer_cost = Calculations.calculate_energy_cost(shifted_summer_hourly, peak_hours)
 
             # Display results in the output text box
-            self.output_text.delete("1.0", tk.END)
-            self.output_text.insert(tk.END, f"Winter Hourly Energy Cost (Original): {winter_cost:.3f} $\n")
-            self.output_text.insert(tk.END, f"Winter Hourly Energy Cost (Battery): {battery_winter_cost:.3f} $\n")
-            self.output_text.insert(tk.END, f"Winter Hourly Energy Cost (Shifted): {shifted_winter_cost:.3f} $\n")
-
             self.output_text.insert(tk.END, f"\nSummer Hourly Energy Cost (Original): {summer_cost:.3f} $\n")
             self.output_text.insert(tk.END, f"Summer Hourly Energy Cost (Battery): {battery_summer_cost:.3f} $\n")
             self.output_text.insert(tk.END, f"Summer Hourly Energy Cost (Shifted): {shifted_summer_cost:.3f} $\n")
 
             # Plot the profiles
-            self.plot_profiles(winter_profile_df, battery_winter_profile_df, shifted_winter_profile_df)
-            self.plot_profiles(summer_profile_df, battery_summer_profile_df, shifted_summer_profile_df)
-        
+            self.plot_seasonal_profiles(
+                winter_hourly, battery_winter_hourly, shifted_winter_hourly, winter_meteorological_df,
+                summer_hourly, battery_summer_hourly, shifted_summer_hourly, summer_meteorological_df,
+                peak_hours
+
+            )
+
         except Exception as e:
             messagebox.showerror("Error", str(e))
 
     @staticmethod
-    def plot_profiles(profile_df, battery_profile_df, shifted_profile_df):
-        """ Plot the original, updated, and shifted load profiles. """
+    def plot_seasonal_profiles(winter_hourly, battery_winter_hourly, shifted_winter_hourly, winter_meteorological_df, summer_hourly, battery_summer_hourly, shifted_summer_hourly, summer_meteorological_df, peak_hours):
+        """Plot winter and summer profiles as bar charts."""
 
-        profile_hourly = EnergyAnalyzerApp.generate_hourly_profile(profile_df)
-        battery_profile_hourly = EnergyAnalyzerApp.generate_hourly_profile(battery_profile_df)
-        shifted_profile_hourly = EnergyAnalyzerApp.generate_hourly_profile(shifted_profile_df)
+        # Create subplots
+        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(15, 10))
         
-        plt.figure(figsize=(12, 6))
+        # Bar width and positions
+        width = 0.25
+        x = np.arange(24)
+        
+        # Winter plot
+        ax1.bar(x - width, winter_hourly['Power (kW)'], width, label='Original Profile', color='blue', alpha=0.7)
+        # ax1.bar(x, battery_winter_hourly['Power (kW)'], width, label='Battery Profile', color='green', alpha=0.7)
+        # ax1.bar(x + width, shifted_winter_hourly['Power (kW)'], width, label='Shifted Profile', color='red', alpha=0.7)
+        ax1.axvspan(min(peak_hours)-0.5, max(peak_hours)+0.5, color='yellow', alpha=0.2, label='Peak Hours')
+        ax1.set_title('Winter Load Profiles')
+        ax1.set_xlabel('Hour of Day')
+        ax1.set_ylabel('Power (kW)')
+        ax1.legend()
+        ax1.grid(True, alpha=0.3)
+        
+        # Summer plot
+        ax2.bar(x - width, summer_hourly['Power (kW)'], width, label='Original Profile', color='blue', alpha=0.7)
+        # ax2.bar(x, battery_summer_hourly['Power (kW)'], width, label='Battery Profile', color='green', alpha=0.7)
+        # ax2.bar(x + width, shifted_summer_hourly['Power (kW)'], width, label='Shifted Profile', color='red', alpha=0.7)
+        ax2.axvspan(min(peak_hours)-0.5, max(peak_hours)+0.5, color='yellow', alpha=0.2, label='Peak Hours')
+        ax2.set_title('Summer Load Profiles')
+        ax2.set_xlabel('Hour of Day')
+        ax2.set_ylabel('Power (kW)')
+        ax2.legend()
+        ax2.grid(True, alpha=0.3)
 
-        # Plot original profile
-        plt.plot(profile_hourly.index, profile_hourly['Power (kW)'], label="Original Profile", color="blue", linestyle="-")
-        # Plot battery profile
-        plt.plot(battery_profile_hourly.index, battery_profile_hourly['Power (kW)'], label="Battery Profile", color="green", linestyle="--")
-        # Plot shifted profile
-        plt.plot(shifted_profile_hourly.index, shifted_profile_hourly['Power (kW)'], label="Shifted Profile", color="red", linestyle=":")
-
-        # Adding title and labels
-        plt.title("Comparison of Load Profiles (Summed by Hour)")
-        plt.xlabel("Hour of the Day")
-        plt.ylabel("Energy (kW)")
-        plt.legend()
-        plt.grid(True)
-
-        # Show the plot
+        plt.tight_layout()
         plt.show()
-    
+
+        # Create subplots
+        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(15, 10))
+        x = np.arange(24)
+
+        ax1.bar(x, winter_meteorological_df['Irradiation (kW/m^2)'], width, label='Shifted Profile', color='yellow', alpha=0.7)
+        ax1.set_title('Winter Load Profiles')
+        ax1.set_xlabel('Hour of Day')
+        ax1.set_ylabel('Power (kW)')
+        ax1.legend()
+        ax1.grid(True, alpha=0.3)
+
+        ax2.bar(x, summer_meteorological_df['Irradiation (kW/m^2)'], width, label='Shifted Profile', color='yellow', alpha=0.7)
+        ax2.set_title('Summer Load Profiles')
+        ax2.set_xlabel('Hour of Day')
+        ax2.set_ylabel('Power (kW)')
+        ax2.legend()
+        ax2.grid(True, alpha=0.3)
+
+        plt.tight_layout()
+        plt.show()
+
+    @staticmethod
+    def generate_adjusted_profile(df, battery_df=None):
+        """Generate the adjusted profile, considering battery discharge if provided."""
+        
+        # Generate the hourly profile for the given dataframe
+        hourly_profile = EnergyAnalyzerApp.generate_hourly_profile(df)
+        
+        # If battery_df is provided, adjust the profile by subtracting battery discharge
+        if battery_df is not None:
+            # Extract battery discharge entries from the battery_df
+            battery_entries = battery_df[battery_df['Name'].str.contains('Battery Discharge', na=False)]
+            
+            # Create battery discharge profile
+            battery_discharge = pd.DataFrame(0, index=np.arange(24), columns=['Power (kW)'])
+            
+            # Sum up battery discharge for each hour
+            for _, row in battery_entries.iterrows():
+                hour = int(row['Start'])
+                discharge = abs(row['Rated Power (kW)'])  # Convert negative discharge to positive
+                battery_discharge.loc[hour, 'Power (kW)'] += discharge
+            
+            # Subtract battery discharge from the original hourly profile
+            hourly_profile['Power (kW)'] -= battery_discharge['Power (kW)']
+        
+        return hourly_profile
+
     @staticmethod
     def generate_hourly_profile(df):
+        """Generate hourly power profile from appliance usage."""
+        
         # Create an empty DataFrame to store hourly data
         hourly_profile = pd.DataFrame(0, index=np.arange(24), columns=['Power (kW)'])
         
@@ -190,16 +272,14 @@ class EnergyAnalyzerApp:
             end_time = row['End']
             power = row['Rated Power (kW)']
             
-            # If start and end times are within the same day
             if start_time < end_time:
-                # Add the power to the corresponding hours
                 hourly_profile.loc[int(start_time):int(end_time)-1, 'Power (kW)'] += power
-            # If the times span over midnight
             else:
                 hourly_profile.loc[int(start_time):23, 'Power (kW)'] += power
                 hourly_profile.loc[0:int(end_time)-1, 'Power (kW)'] += power
         
         return hourly_profile
+
 
 # Show the plot
 plt.show()

@@ -8,8 +8,7 @@ Methods:
     from_excel(meteorological_file_path): Reads meteorological data from an Excel file and returns a list of MeteorologicalData instances.
     from_csv(meteorological_file_path): Reads meteorological data from a CSV file and returns a list of MeteorologicalData instances.
 
-THIS CODE ONLY WORKS WITH SPECICIF FILES
-ITS COMPATIBLE WITH CSV METEOROLOGY FILES FROM: https://re.jrc.ec.europa.eu/pvg_tools/en/#TMY
+NOTE: THIS CODE ONLY WORKS WITH SPECICIF FILES. ITS COMPATIBLE WITH CSV METEOROLOGY FILES FROM: https://re.jrc.ec.europa.eu/pvg_tools/en/#TMY
 """
 
 import pandas as pd
