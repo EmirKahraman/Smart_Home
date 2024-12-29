@@ -164,8 +164,8 @@ class EnergyAnalyzerApp:
 
             # Plot the profiles
             self.plot_seasonal_profiles(
-                winter_hourly, battery_winter_hourly, shifted_winter_hourly, winter_meteorological_df, winter_soc,
-                summer_hourly, battery_summer_hourly, shifted_summer_hourly, summer_meteorological_df, summer_soc,
+                winter_hourly, battery_winter_hourly, shifted_winter_hourly, winter_meteorological_df, winter_soc, winter_cost, battery_winter_cost, shifted_winter_cost,
+                summer_hourly, battery_summer_hourly, shifted_summer_hourly, summer_meteorological_df, summer_soc, summer_cost, battery_summer_cost, shifted_summer_cost,
                 peak_hours
             )
 
@@ -173,8 +173,8 @@ class EnergyAnalyzerApp:
             messagebox.showerror("Error", str(e))
 
     @staticmethod
-    def plot_seasonal_profiles(winter_hourly, battery_winter_hourly, shifted_winter_hourly, winter_meteorological_df, winter_soc, 
-                               summer_hourly, battery_summer_hourly, shifted_summer_hourly, summer_meteorological_df, summer_soc, 
+    def plot_seasonal_profiles(winter_hourly, battery_winter_hourly, shifted_winter_hourly, winter_meteorological_df, winter_soc, winter_cost, battery_winter_cost, shifted_winter_cost,
+                               summer_hourly, battery_summer_hourly, shifted_summer_hourly, summer_meteorological_df, summer_soc, summer_cost, battery_summer_cost, shifted_summer_cost,
                                peak_hours):
         """Plot winter and summer profiles as bar charts."""
 
@@ -184,18 +184,18 @@ class EnergyAnalyzerApp:
         x = np.arange(24)
 
         ax1.bar(x, winter_meteorological_df['Irradiation (kW/m^2)'], width, label='Solar Irradiation', color='yellow', alpha=0.7)
-        ax1.set_title('Winter Load Profiles')
+        ax1.set_title('Winter Meteorological Data')
         ax1.set_xlabel('Hour of Day')
-        ax1.set_ylabel('Power (kW)')
+        ax1.set_ylabel('Irradiation (kW/m^2)')
         ax1.set_xticks(x)
         ax1.set_xticklabels([str(i) for i in range(24)])
         ax1.legend()
         ax1.grid(True, alpha=0.3)
 
         ax2.bar(x, summer_meteorological_df['Irradiation (kW/m^2)'], width, label='Solar Irradiation', color='yellow', alpha=0.7)
-        ax2.set_title('Summer Load Profiles')
+        ax2.set_title('Summer Meteorological Data')
         ax2.set_xlabel('Hour of Day')
-        ax2.set_ylabel('Power (kW)')
+        ax2.set_ylabel('Irradiation (kW/m^2)')
         ax2.set_xticks(x)
         ax2.set_xticklabels([str(i) for i in range(24)])
         ax2.legend()
@@ -210,18 +210,18 @@ class EnergyAnalyzerApp:
         x = np.arange(24)
 
         ax1.bar(x, winter_soc['State of Charge (%)'], width, label='Battery SoC', color='orange', alpha=0.7)
-        ax1.set_title('Winter Load Profiles')
+        ax1.set_title('Winter SoC')
         ax1.set_xlabel('Hour of Day')
-        ax1.set_ylabel('Power (kW)')
+        ax1.set_ylabel('State of Charge (%)')
         ax1.set_xticks(x)
         ax1.set_xticklabels([str(i) for i in range(24)])
         ax1.legend()
         ax1.grid(True, alpha=0.3)
 
         ax2.bar(x, summer_soc['State of Charge (%)'], width, label='Battery SoC', color='orange', alpha=0.7)
-        ax2.set_title('Summer Load Profiles')
+        ax2.set_title('Summer SoC')
         ax2.set_xlabel('Hour of Day')
-        ax2.set_ylabel('Power (kW)')
+        ax2.set_ylabel('State of Charge (%)')
         ax2.set_xticks(x)
         ax2.set_xticklabels([str(i) for i in range(24)])
         ax2.legend()
@@ -234,8 +234,7 @@ class EnergyAnalyzerApp:
         fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(15, 10))
         width = 0.3
         x = np.arange(24)
-        
-        # Winter plot
+
         ax1.bar(x - width, winter_hourly['Power (kW)'], width, label='Original Profile', color='blue', alpha=0.7)
         ax1.bar(x, battery_winter_hourly['Power (kW)'], width, label='Battery Profile', color='green', alpha=0.7)
         ax1.bar(x + width, shifted_winter_hourly['Power (kW)'], width, label='Shifted Profile', color='red', alpha=0.7)
@@ -248,7 +247,6 @@ class EnergyAnalyzerApp:
         ax1.legend()
         ax1.grid(True, alpha=0.3)
         
-        # Summer plot
         ax2.bar(x - width, summer_hourly['Power (kW)'], width, label='Original Profile', color='blue', alpha=0.7)
         ax2.bar(x, battery_summer_hourly['Power (kW)'], width, label='Battery Profile', color='green', alpha=0.7)
         ax2.bar(x + width, shifted_summer_hourly['Power (kW)'], width, label='Shifted Profile', color='red', alpha=0.7)
@@ -258,6 +256,30 @@ class EnergyAnalyzerApp:
         ax2.set_ylabel('Power (kW)')
         ax2.set_xticks(x)
         ax2.set_xticklabels([str(i) for i in range(24)])
+        ax2.legend()
+        ax2.grid(True, alpha=0.3)
+
+        plt.tight_layout()
+        plt.show()
+
+        # Cost graphs
+        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(15, 10))
+        width = 0.3
+        x = 3
+
+        ax1.bar(x - width, winter_cost, width, label='Original Profile', color='blue', alpha=0.7)
+        ax1.bar(x, battery_winter_cost, width, label='Battery Profile', color='green', alpha=0.7)
+        ax1.bar(x + width, shifted_winter_cost, width, label='Shifted Profile', color='red', alpha=0.7)
+        ax1.set_title('Winter Cost Calculations')
+        ax1.set_ylabel('Cost ($)')
+        ax1.legend()
+        ax1.grid(True, alpha=0.3)
+
+        ax2.bar(x - width, summer_cost, width, label='Original Profile', color='blue', alpha=0.7)
+        ax2.bar(x, battery_summer_cost, width, label='Battery Profile', color='green', alpha=0.7)
+        ax2.bar(x + width, shifted_summer_cost, width, label='Shifted Profile', color='red', alpha=0.7)
+        ax2.set_title('Summer Cost Calculations')
+        ax2.set_ylabel('Cost ($)')
         ax2.legend()
         ax2.grid(True, alpha=0.3)
 
