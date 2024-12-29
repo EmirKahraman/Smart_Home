@@ -7,13 +7,11 @@
 2. [Instructions](#instructions)
 3. [Features](#features)
 4. [Data Requirements](#data-requirements)
-5. [Additional Tools](#additional-tools)
-6. [Installation](#installation)
-7. [Usage](#usage)
-8. [Detailed Documentation](#detailed-documentation)
-9. [Figures](#figures)
-10. [Contributing](#contributing)
-11. [License](#license)
+5. [Installation](#installation)
+6. [Usage](#usage)
+7. [Detailed Documentation](#detailed-documentation)
+8. [Contributing](#contributing)
+9. [License](#license)
 
 ## Overview
 This project provides a smart home model designed to optimize power consumption. By managing energy loads and utilizing renewable energy sources, it helps analyze cost savings and improve energy efficiency.
