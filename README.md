@@ -52,6 +52,10 @@ Execute the main program:
 python main.py
 ```
 
+
+## Detailed Documentation
+- [Report](./docs/reports.md)
+
 ## Contributing
 
 Contributions are welcome! Please fork the repository and create a pull request.
