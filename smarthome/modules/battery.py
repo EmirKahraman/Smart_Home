@@ -189,4 +189,3 @@ class Battery:
         print("\nUpdated profile with separate battery discharge appliances:")
         print(profile_df)
         return profile_df
-
