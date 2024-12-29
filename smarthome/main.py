@@ -166,7 +166,7 @@ class EnergyAnalyzerApp:
             self.plot_seasonal_profiles(
                 winter_hourly, battery_winter_hourly, shifted_winter_hourly, winter_meteorological_df, winter_soc, winter_cost, battery_winter_cost, shifted_winter_cost,
                 summer_hourly, battery_summer_hourly, shifted_summer_hourly, summer_meteorological_df, summer_soc, summer_cost, battery_summer_cost, shifted_summer_cost,
-                peak_hours
+                threshold, peak_hours
             )
 
         except Exception as e:
@@ -175,7 +175,7 @@ class EnergyAnalyzerApp:
     @staticmethod
     def plot_seasonal_profiles(winter_hourly, battery_winter_hourly, shifted_winter_hourly, winter_meteorological_df, winter_soc, winter_cost, battery_winter_cost, shifted_winter_cost,
                                summer_hourly, battery_summer_hourly, shifted_summer_hourly, summer_meteorological_df, summer_soc, summer_cost, battery_summer_cost, shifted_summer_cost,
-                               peak_hours):
+                               threshold, peak_hours):
         """Plot winter and summer profiles as bar charts."""
 
         # Meteorological data plots
@@ -239,6 +239,7 @@ class EnergyAnalyzerApp:
         ax1.bar(x, battery_winter_hourly['Power (kW)'], width, label='Battery Profile', color='green', alpha=0.7)
         ax1.bar(x + width, shifted_winter_hourly['Power (kW)'], width, label='Shifted Profile', color='red', alpha=0.7)
         ax1.axvspan(min(peak_hours)-0.5, max(peak_hours)+0.5, color='yellow', alpha=0.2, label='Peak Hours')
+        ax1.axhline(threshold, color='black', linestyle='--', linewidth=1.5, label='Threshold')
         ax1.set_title('Winter Load Profiles')
         ax1.set_xlabel('Hour of Day')
         ax1.set_ylabel('Power (kW)')
@@ -251,6 +252,7 @@ class EnergyAnalyzerApp:
         ax2.bar(x, battery_summer_hourly['Power (kW)'], width, label='Battery Profile', color='green', alpha=0.7)
         ax2.bar(x + width, shifted_summer_hourly['Power (kW)'], width, label='Shifted Profile', color='red', alpha=0.7)
         ax2.axvspan(min(peak_hours)-0.5, max(peak_hours)+0.5, color='yellow', alpha=0.2, label='Peak Hours')
+        ax2.axhline(threshold, color='black', linestyle='--', linewidth=1.5, label='Threshold')
         ax2.set_title('Summer Load Profiles')
         ax2.set_xlabel('Hour of Day')
         ax2.set_ylabel('Power (kW)')
@@ -272,6 +274,8 @@ class EnergyAnalyzerApp:
         ax1.bar(x + width, shifted_winter_cost, width, label='Shifted Profile', color='red', alpha=0.7)
         ax1.set_title('Winter Cost Calculations')
         ax1.set_ylabel('Cost ($)')
+        ax1.set_xticks([x - width, x, x + width])
+        ax1.set_xticklabels(['Original\nProfile', 'Battery\nProfile', 'Shifted\nProfile'])
         ax1.legend()
         ax1.grid(True, alpha=0.3)
 
@@ -280,6 +284,8 @@ class EnergyAnalyzerApp:
         ax2.bar(x + width, shifted_summer_cost, width, label='Shifted Profile', color='red', alpha=0.7)
         ax2.set_title('Summer Cost Calculations')
         ax2.set_ylabel('Cost ($)')
+        ax2.set_xticks([x - width, x, x + width])
+        ax2.set_xticklabels(['Original\nProfile', 'Battery\nProfile', 'Shifted\nProfile'])
         ax2.legend()
         ax2.grid(True, alpha=0.3)
 
