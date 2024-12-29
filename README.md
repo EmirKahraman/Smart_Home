@@ -26,10 +26,6 @@ The program will calculate:
 - **Electric Load Profile**
 - **Meteorological Data**
 
-## Additional Tools
-
-A faster terminal version is available for quick data calculations.
-
 ## Installation
 
 1. Clone the repository:
