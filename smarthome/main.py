@@ -184,6 +184,7 @@ class EnergyAnalyzerApp:
 
         # Meteorological data plots
         fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(15, 10))
+        width = 0.50
         x = np.arange(24)
 
         ax1.bar(x, winter_meteorological_df['Irradiation (kW/m^2)'], width, label='Solar Irradiation', color='yellow', alpha=0.7)
@@ -205,6 +206,7 @@ class EnergyAnalyzerApp:
 
         # State of Charge plots
         fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(15, 10))
+        width = 0.50
         x = np.arange(24)
 
         ax1.bar(x, winter_soc['State of Charge (%)'], width, label='Battery SoC', color='orange', alpha=0.7)
