@@ -64,6 +64,24 @@ class ElectricLoad:
         winter_load.rename(columns={'Winter Hours Start': 'Start', 'Winter Hours End': 'End'}, inplace=True)
         summer_load.rename(columns={'Summer Hours Start': 'Start', 'Summer Hours End': 'End'}, inplace=True)
 
+        # Replace rows where both 'Start' and 'End' are 0 with NaN
+        print("Replacing rows with 'Start' = 0 and 'End' = 0 with NaN and dropping them...")
+        winter_load.loc[(winter_load['Start'] == 0) & (winter_load['End'] == 0), ['Start', 'End']] = None
+        summer_load.loc[(summer_load['Start'] == 0) & (summer_load['End'] == 0), ['Start', 'End']] = None
+
+        # Drop rows where 'Start' or 'End' is NaN
+        initial_winter_count = len(winter_load)
+        initial_summer_count = len(summer_load)
+
+        winter_load = winter_load.dropna(subset=['Start', 'End'])
+        summer_load = summer_load.dropna(subset=['Start', 'End'])
+
+        dropped_winter = initial_winter_count - len(winter_load)
+        dropped_summer = initial_summer_count - len(summer_load)
+
+        print(f"Dropped {dropped_winter} rows from winter load where 'Start' and 'End' are 0.")
+        print(f"Dropped {dropped_summer} rows from summer load where 'Start' and 'End' are 0.")
+
         print(f"\nCleaned Electric Load Data Table:\n{df}")
         print(f"\nWinter Load Data:\n{winter_load}")
         print(f"\nSummer Load Data:\n{summer_load}")
