@@ -108,16 +108,13 @@ class EnergyAnalyzerApp:
             battery_winter_profile_df, winter_soc = battery.simulate_battery(winter_profile_df, winter_meteorological_df, threshold, peak_hours)    # Manage battery for winter profile
             shifted_winter_profile_df = Calculations.shift_loads(battery_winter_profile_df, threshold, peak_hours)    # Shift winter profile
 
-            print(f"Original Profile: {type(winter_profile_df)}, Shape: {np.shape(winter_profile_df)}")
+            print(f"\nOriginal Profile: {type(winter_profile_df)}, Shape: {np.shape(winter_profile_df)}")
             print(f"Battery Profile: {type(battery_winter_profile_df)}, Shape: {np.shape(battery_winter_profile_df)}")
             print(f"Shifted Profile: {type(shifted_winter_profile_df)}, Shape: {np.shape(shifted_winter_profile_df)}")    
 
-            winter_hourly = EnergyAnalyzerApp.generate_adjusted_profile(winter_profile_df)
-            print(winter_hourly)
+            winter_hourly = EnergyAnalyzerApp.generate_adjusted_profile(winter_profile_df)  # Generate adjusted winter profile
             battery_winter_hourly = EnergyAnalyzerApp.generate_adjusted_profile(winter_profile_df, battery_winter_profile_df)
-            print(battery_winter_hourly)
             shifted_winter_hourly = EnergyAnalyzerApp.generate_adjusted_profile(shifted_winter_profile_df, battery_winter_profile_df)
-            print(shifted_winter_hourly)
 
             winter_cost = Calculations.calculate_energy_cost(winter_hourly, peak_hours)
             battery_winter_cost = Calculations.calculate_energy_cost(battery_winter_hourly, peak_hours)
@@ -148,7 +145,7 @@ class EnergyAnalyzerApp:
             battery_summer_profile_df, summer_soc = battery.simulate_battery(summer_profile_df, summer_meteorological_df, threshold, peak_hours)    # Manage battery for summer profile
             shifted_summer_profile_df = Calculations.shift_loads(battery_summer_profile_df, threshold, peak_hours)    # Shift summer profile
 
-            print(f"Original Profile: {type(summer_profile_df)}, Shape: {np.shape(summer_profile_df)}")                 # Display the original profile
+            print(f"\nOriginal Profile: {type(summer_profile_df)}, Shape: {np.shape(summer_profile_df)}")                 # Display the original profile
             print(f"Battery Profile: {type(battery_summer_profile_df)}, Shape: {np.shape(battery_summer_profile_df)}")
             print(f"Shifted Profile: {type(shifted_summer_profile_df)}, Shape: {np.shape(shifted_summer_profile_df)}") 
 
@@ -170,7 +167,6 @@ class EnergyAnalyzerApp:
                 winter_hourly, battery_winter_hourly, shifted_winter_hourly, winter_meteorological_df, winter_soc,
                 summer_hourly, battery_summer_hourly, shifted_summer_hourly, summer_meteorological_df, summer_soc,
                 peak_hours
-
             )
 
         except Exception as e:
@@ -191,6 +187,8 @@ class EnergyAnalyzerApp:
         ax1.set_title('Winter Load Profiles')
         ax1.set_xlabel('Hour of Day')
         ax1.set_ylabel('Power (kW)')
+        ax1.set_xticks(x)
+        ax1.set_xticklabels([str(i) for i in range(24)])
         ax1.legend()
         ax1.grid(True, alpha=0.3)
 
@@ -198,6 +196,8 @@ class EnergyAnalyzerApp:
         ax2.set_title('Summer Load Profiles')
         ax2.set_xlabel('Hour of Day')
         ax2.set_ylabel('Power (kW)')
+        ax2.set_xticks(x)
+        ax2.set_xticklabels([str(i) for i in range(24)])
         ax2.legend()
         ax2.grid(True, alpha=0.3)
 
@@ -213,6 +213,8 @@ class EnergyAnalyzerApp:
         ax1.set_title('Winter Load Profiles')
         ax1.set_xlabel('Hour of Day')
         ax1.set_ylabel('Power (kW)')
+        ax1.set_xticks(x)
+        ax1.set_xticklabels([str(i) for i in range(24)])
         ax1.legend()
         ax1.grid(True, alpha=0.3)
 
@@ -220,6 +222,8 @@ class EnergyAnalyzerApp:
         ax2.set_title('Summer Load Profiles')
         ax2.set_xlabel('Hour of Day')
         ax2.set_ylabel('Power (kW)')
+        ax2.set_xticks(x)
+        ax2.set_xticklabels([str(i) for i in range(24)])
         ax2.legend()
         ax2.grid(True, alpha=0.3)
 
@@ -228,7 +232,7 @@ class EnergyAnalyzerApp:
 
         # Load profiles
         fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(15, 10))
-        width = 0.25
+        width = 0.3
         x = np.arange(24)
         
         # Winter plot
@@ -239,6 +243,8 @@ class EnergyAnalyzerApp:
         ax1.set_title('Winter Load Profiles')
         ax1.set_xlabel('Hour of Day')
         ax1.set_ylabel('Power (kW)')
+        ax1.set_xticks(x)
+        ax1.set_xticklabels([str(i) for i in range(24)])
         ax1.legend()
         ax1.grid(True, alpha=0.3)
         
@@ -250,6 +256,8 @@ class EnergyAnalyzerApp:
         ax2.set_title('Summer Load Profiles')
         ax2.set_xlabel('Hour of Day')
         ax2.set_ylabel('Power (kW)')
+        ax2.set_xticks(x)
+        ax2.set_xticklabels([str(i) for i in range(24)])
         ax2.legend()
         ax2.grid(True, alpha=0.3)
 

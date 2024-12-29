@@ -60,6 +60,7 @@ class Calculations:
 
         # Sort appliances by their priority group (highest priority first)
         sorted_profile = profile_df.sort_values(by="Priority Group", ascending=False)
+        print(sorted_profile)
 
         # Iterate over each peak hour to check the load and shift appliances if necessary
         for hour in peak_hours:
@@ -72,50 +73,63 @@ class Calculations:
             excess_load = peak_hour_loads[hour] - threshold
             if excess_load <= 0:
                 print(f"No excess load detected: {excess_load} kW. Skipping appliances...")
-                break
+                continue  # Skip the shifting for this hour, as the load is within limits
             else:
                 print(f"Excess load detected: {excess_load} kW. Shifting appliances...")
 
-                # Check appliances that are active during this hour, sorted by priority
+                # Identify appliances that are contributing to the excess load
+                appliances_to_shift = []
                 for index, row in sorted_profile.iterrows():
                     name = row["Name"]
                     start, end = row["Start"], row["End"]
                     rated_power = row["Rated Power (kW)"]
                     priority = row["Priority Group"]
+                    
+                    # Skip appliances with priority 1
+                    if priority in [1]: 
+                        continue
 
                     # Skip zero-power loads, battery discharges, or appliances that run all day
                     if rated_power == 0 or "Battery Discharge" in name or (start == 0 and end == 24):
                         continue
 
                     # Only consider appliances that are running during the current peak hour
-                    if peak_hour_loads[hour] - rated_power > threshold: # Skip if removing this appliance doesn't reduce the load
-                        if name not in shifted_appliances:              # Ensure the appliance hasn't been shifted already
-                            if start <= hour < end:                     # Check if the appliance is active during the peak hour
-                                print(f"  Appliance '{name}' is active during hour {hour} with {rated_power} kW")
+                    if start <= hour < end: 
+                        appliances_to_shift.append((index, name, rated_power))
 
-                                shift_start = (PEAK_END + 1) % 24   # Shift the appliance to after peak hours (22:00 => 23:00)
-                                shift_end = (shift_start + (int(end) - int(start))) % 24
+                # Sort appliances by their contribution to the excess load (highest first)
+                appliances_to_shift = sorted(appliances_to_shift, key=lambda x: x[2], reverse=True)
 
-                                # Update the profile with the new start and end times
-                                print(f"  Shifting appliance '{name}' from ({start}, {end}) to ({shift_start}, {shift_end})")
-                                profile_df.at[index, "Start"] = shift_start
-                                profile_df.at[index, "End"] = shift_end
+                # Shift appliances that contribute most to the excess load
+                for index, name, rated_power in appliances_to_shift:
+                    # Skip if this appliance has already been shifted
+                    if name in shifted_appliances:
+                        continue
 
-                                # Mark this appliance as shifted
-                                shifted_appliances[name] = True
+                    # Calculate new times for shifting the appliance
+                    shift_start = (PEAK_END + 1) % 24  # Move to the next hour after the peak
+                    shift_end = (shift_start + (int(profile_df.at[index, "End"]) - int(profile_df.at[index, "Start"]))) % 24
 
-                                # Recalculate peak hour loads after shifting the appliance
-                                peak_hour_loads[hour] = calculate_total_load_for_hour(hour, profile_df.to_dict(orient='records'))
+                    # Update the profile with the new start and end times
+                    print(f"  Shifting appliance '{name}' from ({profile_df.at[index, 'Start']}, {profile_df.at[index, 'End']}) to ({shift_start}, {shift_end})")
+                    profile_df.at[index, "Start"] = shift_start
+                    profile_df.at[index, "End"] = shift_end
 
-                                # Break if the load is now below threshold after shifting
-                                if peak_hour_loads[hour] <= threshold:
-                                    break
-                
+                    # Mark this appliance as shifted
+                    shifted_appliances[name] = True
+
+                    # Recalculate peak hour loads after shifting the appliance
+                    peak_hour_loads[hour] = calculate_total_load_for_hour(hour, profile_df.to_dict(orient='records'))
+
+                    # Break if the load is now below threshold after shifting
+                    if peak_hour_loads[hour] <= threshold:
+                        print(f"Load for hour {hour} is now within the threshold: {peak_hour_loads[hour]} kW. Stopping further shifts.")
+                        break
 
         print(f"\nShifted Load Profile:\n{profile_df}")
         print("Load shifting completed.")
         return profile_df
-        
+
     @staticmethod
     def calculate_energy_cost(hourly_df, peak_hours):
         """
