@@ -60,69 +60,69 @@ These values were calculated based on the load_profile_v3.xlsx and meteorologica
 
 ##### Solar Irradiation
 <p align="center">
-  <img src="./docs/solar.png" alt="Electric Load Profile Data"/>
+  <img src="./docs/solar.png" alt="Graph of solar irradiation data over a specific period"/>
   <br>
   <em>Figure 1: Solar Irradiation Data</em>
 </p>
 
 ##### Battery Status
 <p align="center">
-  <img src="./docs/battery.png" alt="Meteorological Data"/>
+  <img src="./docs/battery.png" alt="Graph showing the battery state of charge over time"/>
   <br>
   <em>Figure 2: Battery Status</em>
 </p>
 
-#### Tresholds
+#### Thresholds
 Thresholds represent specific values set to analyze system behavior and outputs. The program calculates results and cost savings for the following threshold levels:
 
 ##### Threshold 3
 <p align="center">
-  <img src="./docs/tres3p.png" alt="Results for Threshold 3"/>
+  <img src="./docs/tres3p.png" alt="Graph of system behavior for threshold level 3"/>
   <br>
   <em>Figure 3: Results for Threshold 3</em>
 </p>
 
 <p align="center">
-  <img src="./docs/tres3c.png" alt="Cost Savings for Threshold 3"/>
+  <img src="./docs/tres3c.png" alt="Bar chart showing cost savings for threshold level 3"/>
   <br>
   <em>Figure 4: Cost Savings for Threshold 3</em>
 </p>
 
 ##### Threshold 4
 <p align="center">
-  <img src="./docs/tres4p.png" alt="Results for Threshold 4"/>
+  <img src="./docs/tres4p.png" alt="Graph of system behavior for threshold level 4"/>
   <br>
   <em>Figure 5: Results for Threshold 4</em>
 </p>
 
 <p align="center">
-  <img src="./docs/tres4c.png" alt="Cost Savings for Threshold 4"/>
+  <img src="./docs/tres4c.png" alt="Bar chart showing cost savings for threshold level 4"/>
   <br>
   <em>Figure 6: Cost Savings for Threshold 4</em>
 </p>
 
 ##### Threshold 5
 <p align="center">
-  <img src="./docs/tres5p.png" alt="Results for Threshold 5"/>
+  <img src="./docs/tres5p.png" alt="Graph of system behavior for threshold level 5"/>
   <br>
   <em>Figure 7: Results for Threshold 5</em>
 </p>
 
 <p align="center">
-  <img src="./docs/tres5c.png" alt="Cost Savings for Threshold 5"/>
+  <img src="./docs/tres5c.png" alt="Bar chart showing cost savings for threshold level 5"/>
   <br>
   <em>Figure 8: Cost Savings for Threshold 5</em>
 </p>
 
 ##### Threshold 6
 <p align="center">
-  <img src="./docs/tres6p.png" alt="Results for Threshold 6"/>
+  <img src="./docs/tres6p.png" alt="Graph of system behavior for threshold level 6"/>
   <br>
   <em>Figure 9: Results for Threshold 6</em>
 </p>
 
 <p align="center">
-  <img src="./docs/tres6c.png" alt="Cost Savings for Threshold 6"/>
+  <img src="./docs/tres6c.png" alt="Bar chart showing cost savings for threshold level 6"/>
   <br>
   <em>Figure 10: Cost Savings for Threshold 6</em>
 </p>
