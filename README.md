@@ -4,27 +4,17 @@
 
 ## Table of Contents
 1. [Introduction](#introduction)
-2. [Prerequisites](#prerequisites)
-3. [Instructions](#instructions)
-4. [Features](#features)
-5. [Data Requirements](#data-requirements)
-6. [Installation](#installation)
-7. [Setup](#setup)
-8. [Usage](#usage)
-9. [Detailed Documentation](#detailed-documentation)
-10. [Examples](#examples)
-11. [FAQ](#faq)
-12. [Contributing](#contributing)
-13. [Contact Information](#contact-information)
-14. [Changelog](#changelog)
-15. [License](#license)
+2. [Instructions](#instructions)
+3. [Features](#features)
+4. [Data Requirements](#data-requirements)
+5. [Installation](#installation)
+6. [Setup](#setup)
+7. [Usage](#usage)
+8. [Examples](#examples)
+9. [License](#license)
 
 ## Introduction
 This project provides a smart home model designed to optimize power consumption. By managing energy loads and utilizing renewable energy sources, it helps analyze cost savings and improve energy efficiency.
-
-## Prerequisites
-- Python 3.x
-- pip
 
 ## Instructions
 
@@ -41,6 +31,7 @@ The program will calculate:
 
 - **Battery Management**
 - **Solar Panel Integration**
+- **Load Shifting**
 
 ## Data Requirements
 
@@ -73,7 +64,7 @@ Execute the main program:
 python main.py
 ```
 
-## Detailed Documentation
+## Examples
 These values were calculated based on the load_profile_v3.xlsx and meteorological_data.csv
 
 #### Solar Irradiation
@@ -141,22 +132,6 @@ These values were calculated based on the load_profile_v3.xlsx and meteorologica
   <br>
   <em>Figure 10: Cost Savings for Threshold 6</em>
 </p>
-
-## Examples
-Provide example code or usage scenarios here.
-
-## FAQ
-List common questions and answers.
-
-## Contributing
-
-Contributions are welcome! Please fork the repository and create a pull request.
-
-## Contact Information
-For support or contributions, contact [Your Contact Information].
-
-## Changelog
-Document changes and updates here.
 
 ## License
 
