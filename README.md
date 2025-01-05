@@ -58,21 +58,24 @@ python main.py
 ## Examples
 These values were calculated based on the load_profile_v3.xlsx and meteorological_data.csv
 
-#### Solar Irradiation
+##### Solar Irradiation
 <p align="center">
   <img src="./docs/solar.png" alt="Electric Load Profile Data"/>
   <br>
   <em>Figure 1: Solar Irradiation Data</em>
 </p>
 
-#### Battery Status
+##### Battery Status
 <p align="center">
   <img src="./docs/battery.png" alt="Meteorological Data"/>
   <br>
   <em>Figure 2: Battery Status</em>
 </p>
 
-#### Threshold 3
+#### Tresholds
+Thresholds represent specific values set to analyze system behavior and outputs. The program calculates results and cost savings for the following threshold levels:
+
+##### Threshold 3
 <p align="center">
   <img src="./docs/tres3p.png" alt="Results for Threshold 3"/>
   <br>
@@ -85,7 +88,7 @@ These values were calculated based on the load_profile_v3.xlsx and meteorologica
   <em>Figure 4: Cost Savings for Threshold 3</em>
 </p>
 
-#### Threshold 4
+##### Threshold 4
 <p align="center">
   <img src="./docs/tres4p.png" alt="Results for Threshold 4"/>
   <br>
@@ -98,7 +101,7 @@ These values were calculated based on the load_profile_v3.xlsx and meteorologica
   <em>Figure 6: Cost Savings for Threshold 4</em>
 </p>
 
-#### Threshold 5
+##### Threshold 5
 <p align="center">
   <img src="./docs/tres5p.png" alt="Results for Threshold 5"/>
   <br>
@@ -111,7 +114,7 @@ These values were calculated based on the load_profile_v3.xlsx and meteorologica
   <em>Figure 8: Cost Savings for Threshold 5</em>
 </p>
 
-#### Threshold 6
+##### Threshold 6
 <p align="center">
   <img src="./docs/tres6p.png" alt="Results for Threshold 6"/>
   <br>
