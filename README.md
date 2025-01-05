@@ -26,7 +26,7 @@ This project provides a smart home model designed to optimize power consumption.
 
 The program will calculate:
 - Cost savings with and without load shifting.
-- Cost savings from PV panels (if installed).
+- Cost savings from PV panels
 
 ## Data Requirements
 
