@@ -3,18 +3,32 @@
 # Smart Home Energy Management
 
 ## Table of Contents
-1. [Overview](#overview)
-2. [Instructions](#instructions)
-3. [Features](#features)
-4. [Data Requirements](#data-requirements)
-5. [Installation](#installation)
-6. [Usage](#usage)
-7. [Detailed Documentation](#detailed-documentation)
-8. [Contributing](#contributing)
-9. [License](#license)
+1. [Introduction](#introduction)
+2. [Overview](#overview)
+3. [Prerequisites](#prerequisites)
+4. [Instructions](#instructions)
+5. [Features](#features)
+6. [Data Requirements](#data-requirements)
+7. [Installation](#installation)
+8. [Setup](#setup)
+9. [Usage](#usage)
+10. [Detailed Documentation](#detailed-documentation)
+11. [Examples](#examples)
+12. [FAQ](#faq)
+13. [Contributing](#contributing)
+14. [Contact Information](#contact-information)
+15. [Changelog](#changelog)
+16. [License](#license)
+
+## Introduction
+This project provides a smart home model designed to optimize power consumption. By managing energy loads and utilizing renewable energy sources, it helps analyze cost savings and improve energy efficiency.
 
 ## Overview
 This project provides a smart home model designed to optimize power consumption. By managing energy loads and utilizing renewable energy sources, it helps analyze cost savings and improve energy efficiency.
+
+## Prerequisites
+- Python 3.x
+- pip
 
 ## Instructions
 
@@ -52,6 +66,10 @@ The program will calculate:
    pip install -r requirements.txt
    ```
 
+## Setup
+1. Set up environment variables if required.
+2. Ensure all dependencies are installed.
+
 ## Usage
 
 Execute the main program:
@@ -63,52 +81,86 @@ python main.py
 These values were calculated based on the load_profile_v3.xlsx and meteorological_data.csv
 
 #### Solar Irradiation
-![Electric Load Profile Data](./docs/solar.png)
-*Figure 1: Solar Irradiation Data*
+<p align="center">
+  <img src="./docs/solar.png" alt="Electric Load Profile Data"/>
+  <br>
+  <em>Figure 1: Solar Irradiation Data</em>
+</p>
 
 #### Battery Status
-![Meteorological Data](./docs/battery.png)
-*Figure 2: Battery Status*
+<p align="center">
+  <img src="./docs/battery.png" alt="Meteorological Data"/>
+  <br>
+  <em>Figure 2: Battery Status</em>
+</p>
 
 #### Threshold 3
-##### Results for Threshold 3
-![Results for Threshold 3](./docs/tres3p.png)
-*Figure 3: Results for Threshold 3*
+<p align="center">
+  <img src="./docs/tres3p.png" alt="Results for Threshold 3"/>
+  <br>
+  <em>Figure 3: Results for Threshold 3</em>
+</p>
 
-##### Cost Savings for Threshold 3
-![Calculations for Threshold 3](./docs/tres3c.png)
-*Figure 4: Cost Savings for Threshold 3*
+<p align="center">
+  <img src="./docs/tres3c.png" alt="Cost Savings for Threshold 3"/>
+  <br>
+  <em>Figure 4: Cost Savings for Threshold 3</em>
+</p>
 
 #### Threshold 4
-##### Results for Threshold 4
-![Results for Threshold 4](./docs/tres4p.png)
-*Figure 5: Results for Threshold 4*
+<p align="center">
+  <img src="./docs/tres4p.png" alt="Results for Threshold 4"/>
+  <br>
+  <em>Figure 5: Results for Threshold 4</em>
+</p>
 
-##### Cost Savings for Threshold 4
-![Calculations for Threshold 4](./docs/tres4c.png)
-*Figure 6: Cost Savings for Threshold 4*
+<p align="center">
+  <img src="./docs/tres4c.png" alt="Cost Savings for Threshold 4"/>
+  <br>
+  <em>Figure 6: Cost Savings for Threshold 4</em>
+</p>
 
 #### Threshold 5
-##### Results for Threshold 5
-![Results for Threshold 5](./docs/tres5p.png)
-*Figure 7: Results for Threshold 5*
+<p align="center">
+  <img src="./docs/tres5p.png" alt="Results for Threshold 5"/>
+  <br>
+  <em>Figure 7: Results for Threshold 5</em>
+</p>
 
-##### Cost Savings for Threshold 5
-![Calculations for Threshold 5](./docs/tres5c.png)
-*Figure 8: Cost Savings for Threshold 5*
+<p align="center">
+  <img src="./docs/tres5c.png" alt="Cost Savings for Threshold 5"/>
+  <br>
+  <em>Figure 8: Cost Savings for Threshold 5</em>
+</p>
 
 #### Threshold 6
-##### Results for Threshold 6
-![Results for Threshold 6](./docs/tres6p.png)
-*Figure 9: Results for Threshold 6*
+<p align="center">
+  <img src="./docs/tres6p.png" alt="Results for Threshold 6"/>
+  <br>
+  <em>Figure 9: Results for Threshold 6</em>
+</p>
 
-##### Cost Savings for Threshold 6
-![Calculations for Threshold 6](./docs/tres6c.png)
-*Figure 10: Cost Savings for Threshold 6*
+<p align="center">
+  <img src="./docs/tres6c.png" alt="Cost Savings for Threshold 6"/>
+  <br>
+  <em>Figure 10: Cost Savings for Threshold 6</em>
+</p>
+
+## Examples
+Provide example code or usage scenarios here.
+
+## FAQ
+List common questions and answers.
 
 ## Contributing
 
 Contributions are welcome! Please fork the repository and create a pull request.
+
+## Contact Information
+For support or contributions, contact [Your Contact Information].
+
+## Changelog
+Document changes and updates here.
 
 ## License
 
