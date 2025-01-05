@@ -4,26 +4,22 @@
 
 ## Table of Contents
 1. [Introduction](#introduction)
-2. [Overview](#overview)
-3. [Prerequisites](#prerequisites)
-4. [Instructions](#instructions)
-5. [Features](#features)
-6. [Data Requirements](#data-requirements)
-7. [Installation](#installation)
-8. [Setup](#setup)
-9. [Usage](#usage)
-10. [Detailed Documentation](#detailed-documentation)
-11. [Examples](#examples)
-12. [FAQ](#faq)
-13. [Contributing](#contributing)
-14. [Contact Information](#contact-information)
-15. [Changelog](#changelog)
-16. [License](#license)
+2. [Prerequisites](#prerequisites)
+3. [Instructions](#instructions)
+4. [Features](#features)
+5. [Data Requirements](#data-requirements)
+6. [Installation](#installation)
+7. [Setup](#setup)
+8. [Usage](#usage)
+9. [Detailed Documentation](#detailed-documentation)
+10. [Examples](#examples)
+11. [FAQ](#faq)
+12. [Contributing](#contributing)
+13. [Contact Information](#contact-information)
+14. [Changelog](#changelog)
+15. [License](#license)
 
 ## Introduction
-This project provides a smart home model designed to optimize power consumption. By managing energy loads and utilizing renewable energy sources, it helps analyze cost savings and improve energy efficiency.
-
-## Overview
 This project provides a smart home model designed to optimize power consumption. By managing energy loads and utilizing renewable energy sources, it helps analyze cost savings and improve energy efficiency.
 
 ## Prerequisites
