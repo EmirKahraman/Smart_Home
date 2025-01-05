@@ -12,10 +12,22 @@
 7. [License](#license)
 
 ## Introduction
-This project provides a smart home model designed to optimize power consumption. By managing energy loads and utilizing renewable energy sources, it helps analyze cost savings and improve energy efficiency. Key features of this system include:
-- **Battery Management:** Efficiently controls battery charge and discharge cycles to maximize energy usage and minimize costs.
-- **Solar Panel Integration:** Incorporates photovoltaic (PV) panels into the energy system to leverage renewable energy sources.
-- **Load Shifting:** Analyzes and adjusts energy loads to minimize peak demand and lower overall energy costs.
+
+This project presents a **Smart Home Energy Management System** designed to optimize power consumption thus reduce energy costs by integrating renewable energy sources and load shifting. Key features of the system include:
+
+- **Battery Management**  
+  The system integrates a **battery** with a capacity equal to half of the home’s maximum peak load. For instance, if the peak load is **6 kW**, the battery capacity will be **3 kWh**. The charging and discharging rates are optimized at **20%** (0.6 kW for a 3 kWh battery) and **30%** (0.9 kW for a 3 kWh battery), respectively.  
+  - The **battery supplies power during peak hours** (17:00 - 22:00).  
+  - It will recharge when the **State of Charge (SoC)** drops below **50%** and is capped at a **maximum SoC of 80%**.  
+  - **Battery usage is halted** once the SoC reaches 30%, ensuring the system's longevity.
+
+- **Solar Panel Integration**  
+  By incorporating **photovoltaic (PV) panels**, the system harnesses **renewable energy**, reducing reliance on grid power and lowering the environmental impact.
+
+- **Load Shifting**  
+  To optimize energy usage, the system implements **load shifting**. When the home's energy consumption exceeds a set threshold, non-essential loads are **shifted outside peak hours** (17:00 - 22:00) based on their priority. This helps to:
+  - Lower peak demand and **reduce overall energy costs**.  
+  - Ensure **essential devices** continue to run during peak times, while non-critical devices are deferred.
 
 ## Instructions
 
@@ -59,13 +71,15 @@ python main.py
 These values were calculated based on the load_profile_v3.xlsx and meteorological_data.csv
 
 ##### Solar Irradiation
+The solar irradiation data was extracted from the meteorological_data.csv file, and the average irradiation was calculated for the summer and winter months. 
 <p align="center">
   <img src="./docs/solar.png" alt="Graph of solar irradiation data over a day"/>
   <br>
-  <em>Figure 1: Solar irradiation data over time</em>
+  <em>Figure 1: Daily solar irradiation profile</em>
 </p>
 
 ##### Battery Status
+The battery charges when solar irradiation is available and discharges during peak demand hours.
 <p align="center">
   <img src="./docs/battery.png" alt="Graph showing the battery state of charge over time"/>
   <br>
