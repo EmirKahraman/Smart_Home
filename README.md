@@ -5,15 +5,17 @@
 ## Table of Contents
 1. [Introduction](#introduction)
 2. [Instructions](#instructions)
-3. [Features](#features)
-4. [Data Requirements](#data-requirements)
-5. [Installation](#installation)
-6. [Usage](#usage)
-7. [Examples](#examples)
-8. [License](#license)
+3. [Data Requirements](#data-requirements)
+4. [Installation](#installation)
+5. [Usage](#usage)
+6. [Examples](#examples)
+7. [License](#license)
 
 ## Introduction
-This project provides a smart home model designed to optimize power consumption. By managing energy loads and utilizing renewable energy sources, it helps analyze cost savings and improve energy efficiency.
+This project provides a smart home model designed to optimize power consumption. By managing energy loads and utilizing renewable energy sources, it helps analyze cost savings and improve energy efficiency. Key features of this system include:
+- **Battery Management:** Efficiently controls battery charge and discharge cycles to maximize energy usage and minimize costs.
+- **Solar Panel Integration:** Incorporates photovoltaic (PV) panels into the energy system to leverage renewable energy sources.
+- **Load Shifting:** Analyzes and adjusts energy loads to minimize peak demand and lower overall energy costs.
 
 ## Instructions
 
@@ -25,12 +27,6 @@ This project provides a smart home model designed to optimize power consumption.
 The program will calculate:
 - Cost savings with and without load shifting.
 - Cost savings from PV panels (if installed).
-
-## Features
-
-- **Battery Management**
-- **Solar Panel Integration**
-- **Load Shifting**
 
 ## Data Requirements
 
