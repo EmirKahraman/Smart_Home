@@ -8,10 +8,9 @@
 3. [Features](#features)
 4. [Data Requirements](#data-requirements)
 5. [Installation](#installation)
-6. [Setup](#setup)
-7. [Usage](#usage)
-8. [Examples](#examples)
-9. [License](#license)
+6. [Usage](#usage)
+7. [Examples](#examples)
+8. [License](#license)
 
 ## Introduction
 This project provides a smart home model designed to optimize power consumption. By managing energy loads and utilizing renewable energy sources, it helps analyze cost savings and improve energy efficiency.
@@ -52,11 +51,7 @@ The program will calculate:
    ```bash
    pip install -r requirements.txt
    ```
-
-## Setup
-1. Set up environment variables if required.
-2. Ensure all dependencies are installed.
-
+   
 ## Usage
 
 Execute the main program:
