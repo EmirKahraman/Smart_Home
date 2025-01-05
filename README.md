@@ -70,30 +70,28 @@ Here are some figures illustrating the project:
 #### Battery Status
 ![Meteorological Data](./docs/battery.png)
 
-#### Results
+#### Treshold 3
 ##### Results for Threshold 3
 ![Results for Threshold 3](./tres3p.png)
-
-##### Results for Threshold 4
-![Results for Threshold 4](./docs/tres4p.png)
-
-##### Results for Threshold 5
-![Results for Threshold 5](./docs/tres5p.png)
-
-##### Results for Threshold 6
-![Results for Threshold 6](./docs/tres6p.png)
-
-#### Cost Savings
-##### Threshold Value 3
+##### Cost Savings for Threshold 3
 ![Calculations for Threshold 3](./docs/tres3c.png)
 
-##### Threshold Value 4
+#### Treshold 4
+##### Results for Threshold 4
+![Results for Threshold 4](./docs/tres4p.png)
+##### Cost Savings for Threshold 4
 ![Calculations for Threshold 4](./docs/tres4c.png)
 
-##### Threshold Value 5
+#### Treshold 5
+##### Results for Threshold 5
+![Results for Threshold 5](./docs/tres5p.png)
+##### Cost Savings for Threshold 5
 ![Calculations for Threshold 5](./docs/tres5c.png)
 
-##### Threshold Value 6
+#### Treshold 6
+##### Results for Threshold 6
+![Results for Threshold 6](./docs/tres6p.png)
+##### Cost Savings for Threshold 6
 ![Calculations for Threshold 6](./docs/tres6c.png)
 
 ## Contributing
