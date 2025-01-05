@@ -60,9 +60,7 @@ python main.py
 ```
 
 ## Detailed Documentation
-
-### Figures
-Here are some figures illustrating the project:
+These values calculated based on the load_profile_v3.xlsx and meteorological_data.csv
 
 #### Solar Irradiation
 ![Electric Load Profile Data](./docs/solar.png)
